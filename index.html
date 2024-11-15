@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Bienvenidos a TiendaOnline</title>
+    <link rel="stylesheet" href="css/styleindex.css">
+</head>
+
+
+
+  
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">TiendaOnline</h1>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="productos.html">Productos</a></li>
+                        <li><a href="carrito.html">Carrito</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Sección de Bienvenida -->
+            <section class="welcome">
+                <h2>Bienvenidos a TiendaOnline</h2>
+                <p>
+                    Somos una tienda online comprometida con ofrecer los mejores productos para ti. Con una amplia variedad de artículos, garantizamos que encuentres lo que buscas a precios competitivos, con envíos rápidos y seguros. ¡Descubre todo lo que tenemos para ti y haz tu compra de forma fácil y segura!
+                </p>
+            </section>
+
+            <!-- Sección de ¿Por qué preferirnos? -->
+            <section class="why-choose-us">
+                <h2>¿Por qué preferirnos?</h2>
+                <div class="why-options">
+                    <div class="why-item">
+                        <h3>Variedad de productos</h3>
+                        <p>Ofrecemos una amplia gama de productos, desde electrónicos hasta artículos para el hogar, todo en un solo lugar.</p>
+                    </div>
+                    <div class="why-item">
+                        <h3>Precios competitivos</h3>
+                        <p>Nos esforzamos por ofrecer los mejores precios en el mercado, sin sacrificar calidad.</p>
+                    </div>
+                    <div class="why-item">
+                        <h3>Envío rápido y seguro</h3>
+                        <p>Realizamos envíos rápidos y confiables, con opciones de seguimiento para que siempre sepas dónde está tu pedido.</p>
+                    </div>
+                    <div class="why-item">
+                        <h3>Atención al cliente</h3>
+                        <p>Contamos con un servicio de atención al cliente 24/7 para resolver cualquier duda o inconveniente que puedas tener.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección de Productos Destacados DOM BD-->
+
+            <section class="featured-products">
+                <h2>Productos Destacados</h2>
+                <div class="product-list">
+                  <!-- Los productos se cargarán aquí dinámicamente -->
+                </div>
+            </section>
+
+
+
+
+
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 TiendaOnline | Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <!-- Firebase y Firestore -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAqQDc5FG4VMNN3qsdJwWzv_iZhfOcQlgI",
+            authDomain: "gestiontiendaudem.firebaseapp.com",
+            projectId: "gestiontiendaudem",
+            storageBucket: "gestiontiendaudem.firebaseapp.com",
+            messagingSenderId: "446141955012",
+            appId: "1:446141955012:web:3a4c15d56ee14fb4e5c291"
+        };
+
+        // Inicializa Firebase y Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Función para cargar los productos desde Firestore
+        async function cargarProductos() {
+            try {
+                const productosSnapshot = await getDocs(collection(db, "productos"));
+                const productosContainer = document.querySelector(".product-list");
+                productosContainer.innerHTML = ""; // Limpiar antes de agregar nuevos productos
+
+                productosSnapshot.forEach((doc) => {
+                    const producto = doc.data();
+                    const productoHTML = `
+                        <div class="product-item">
+                            <img src="${producto.imagen}" alt="${producto.nombre}">
+                            <h3>${producto.nombre}</h3>
+                            <p class="price">$${producto.precio}</p>
+                            <button onclick="window.location.href='detalles.html'">Ver Más</button>
+                        </div>
+                    `;
+                    productosContainer.innerHTML += productoHTML;
+                });
+            } catch (error) {
+                console.error("Error al cargar productos: ", error);
+            }
+        }
+
+        // Espera a que el DOM esté cargado antes de ejecutar `cargarProductos`
+        document.addEventListener("DOMContentLoaded", cargarProductos);
+    </script>
+    <script src="js/script.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/appfire.js"></script>
+</body>
+
+</html>

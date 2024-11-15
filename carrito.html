@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Carrito de Compras</title>
+    <link rel="stylesheet" href="css/carrito.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">TiendaOnline</h1>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="productos.html">Productos</a></li>
+                        <li><a href="carrito.html">Carrito</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <h2>Tu Carrito de Compras</h2>
+
+            <!-- Lista de productos en el carrito -->
+            <div class="cart-items" id="cart-items">
+                <!-- Los productos se agregarán aquí dinámicamente -->
+            </div>
+
+            <!-- Total y botón para comprar -->
+            <div class="cart-summary">
+                <p>Total: $<span id="total-price">0.00</span></p>
+                <button class="btn-checkout" onclick="checkout()">Comprar Todo</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 TiendaOnline | Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

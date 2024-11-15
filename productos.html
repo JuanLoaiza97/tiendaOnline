@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tienda Online</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">TiendaOnline</h1>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="productos.html">Productos</a></li>
+                        <li><a href="carrito.html">Carrito</a></li>
+                    </ul>
+                </nav>
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Buscar productos...">
+                    <button id="searchBtn">Buscar</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+
+
+            <!-- Sección de Productos Destacados DOM BD-->
+
+            <section class="featured-products">
+                <h2>Productos Destacados</h2>
+                <div class="product-list">
+                    <!-- Los productos se cargarán aquí dinámicamente -->
+                </div>
+            </section>
+            
+
+
+
+
+            
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 TiendaOnline | Todos los derechos reservados</p>
+        </div>
+    </footer>
+    <!-- Firebase y Firestore -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAqQDc5FG4VMNN3qsdJwWzv_iZhfOcQlgI",
+            authDomain: "gestiontiendaudem.firebaseapp.com",
+            projectId: "gestiontiendaudem",
+            storageBucket: "gestiontiendaudem.firebaseapp.com",
+            messagingSenderId: "446141955012",
+            appId: "1:446141955012:web:3a4c15d56ee14fb4e5c291"
+        };
+
+        // Inicializa Firebase y Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Función para cargar los productos desde Firestore
+        async function cargarProductos() {
+            try {
+                const productosSnapshot = await getDocs(collection(db, "productos"));
+                const productosContainer = document.querySelector(".product-list");
+                productosContainer.innerHTML = ""; // Limpiar antes de agregar nuevos productos
+
+                productosSnapshot.forEach((doc) => {
+                    const producto = doc.data();
+                    const productoHTML = `
+                        <div class="product-item">
+                            <img src="${producto.imagen}" alt="${producto.nombre}">
+                            <h3>${producto.nombre}</h3>
+                            <p class="price">$${producto.precio}</p>
+                            <button onclick="window.location.href='detalles.html'">Ver Más</button>
+                        </div>
+                    `;
+                    productosContainer.innerHTML += productoHTML;
+                });
+            } catch (error) {
+                console.error("Error al cargar productos: ", error);
+            }
+        }
+
+        // Espera a que el DOM esté cargado antes de ejecutar `cargarProductos`
+        document.addEventListener("DOMContentLoaded", cargarProductos);
+    </script>
+    <script src="js/script.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/appfire.js"></script>
+
+    
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

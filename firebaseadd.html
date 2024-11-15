@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agregar Producto</title>
+  <script type="module" src="js/appfire.js"></script> 
+</head>
+<script type="module">
+    // Importar las funciones necesarias desde el SDK de Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
+    
+    // Tu configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAqQDc5FG4VMNN3qsdJwWzv_iZhfOcQlgI",
+      authDomain: "gestiontiendaudem.firebaseapp.com",
+      projectId: "gestiontiendaudem",
+      storageBucket: "gestiontiendaudem.firebasestorage.app",
+      messagingSenderId: "446141955012",
+      appId: "1:446141955012:web:3a4c15d56ee14fb4e5c291"
+    };
+  
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+  
+    // Inicializar Firestore
+    const db = getFirestore(app);
+  
+    // Ahora puedes usar `db` para interactuar con la base de datos Firestore
+</script>
+<body>
+  <h1>Agregar Producto</h1>
+
+  <form id="product-form">
+    <label for="name">Nombre del Producto:</label>
+    <input type="text" id="name" required><br><br>
+
+    <label for="price">Precio:</label>
+    <input type="number" id="price" required><br><br>
+
+    <label for="description">Descripción:</label>
+    <textarea id="description" required></textarea><br><br>
+
+    <label for="imageUrl">URL de Imagen:</label>
+    <input type="text" id="imageUrl" required><br><br>
+
+    <button type="submit">Agregar Producto</button>
+  </form>
+
+</body>
+</html>
