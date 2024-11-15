@@ -51,7 +51,84 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // Función para cargar los productos del carrito
+        function cargarCarrito() {
+            const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            const cartItems = document.getElementById("cart-items");
+            const totalPriceEl = document.getElementById("total-price");
+
+            cartItems.innerHTML = ""; // Limpia el contenido previo
+            let totalPrice = 0;
+
+            if (carrito.length === 0) {
+                cartItems.innerHTML = "<p>Tu carrito está vacío.</p>";
+                totalPriceEl.textContent = "0.00";
+                return;
+            }
+
+            carrito.forEach((producto, index) => {
+                const itemHTML = `
+                    <div class="cart-item">
+                        <img src="${producto.imagen}" alt="${producto.nombre}">
+                        <div class="cart-item-info">
+                            <h3>${producto.nombre}</h3>
+                            <p>Precio: $${producto.precio.toFixed(2)}</p>
+                            <p>Cantidad: 
+                                <input type="number" min="1" value="${producto.cantidad}" 
+                                    onchange="actualizarCantidad(${index}, this.value)">
+                            </p>
+                            <button class="btn-remove remove-btn" onclick="eliminarProducto(${index})">Eliminar</button>
+                        </div>
+                    </div>
+                `;
+                cartItems.innerHTML += itemHTML;
+                totalPrice += producto.precio * producto.cantidad;
+            });
+
+            totalPriceEl.textContent = totalPrice.toFixed(2); // Actualiza el precio total
+        }
+
+        // Función para actualizar la cantidad de un producto
+        function actualizarCantidad(index, nuevaCantidad) {
+            const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            nuevaCantidad = parseInt(nuevaCantidad);
+
+            if (isNaN(nuevaCantidad) || nuevaCantidad <= 0) {
+                alert("Introduce una cantidad válida.");
+                cargarCarrito();
+                return;
+            }
+
+            carrito[index].cantidad = nuevaCantidad; // Actualiza la cantidad
+            localStorage.setItem("carrito", JSON.stringify(carrito)); // Guarda en LocalStorage
+            cargarCarrito(); // Recarga el carrito
+        }
+
+        // Función para eliminar un producto del carrito
+        function eliminarProducto(index) {
+            const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            carrito.splice(index, 1); // Elimina el producto del array
+            localStorage.setItem("carrito", JSON.stringify(carrito)); // Actualiza LocalStorage
+            cargarCarrito(); // Recarga el carrito
+        }
+
+        // Función para finalizar la compra
+        function checkout() {
+            const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+            if (carrito.length === 0) {
+                alert("El carrito está vacío. Agrega productos antes de comprar.");
+                return;
+            }
+
+            alert("Compra realizada con éxito. Gracias por tu compra.");
+            localStorage.removeItem("carrito"); // Limpia el carrito
+            cargarCarrito(); // Recarga el carrito vacío
+        }
+
+        // Cargar los productos al cargar la página
+        document.addEventListener("DOMContentLoaded", cargarCarrito);
+    </script>
 </body>
 
 </html>

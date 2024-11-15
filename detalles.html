@@ -30,15 +30,13 @@
     <main>
         <div class="container">
             <div class="product-detail">
-                <div class="product-image">
-                    <img src="https://via.placeholder.com/500x500" alt="Producto Detalles">
+                <div class="product-image" id="product-image">
+                    <!-- La imagen del producto se cargará aquí -->
                 </div>
                 <div class="product-info">
-                    <h2>Producto 1</h2>
-                    <p class="product-description">
-                        Este es un producto de alta calidad, ideal para tus necesidades diarias. Perfecto para cualquier ocasión.
-                    </p>
-                    <p class="price">$29.99</p>
+                    <h2 id="product-name">Cargando...</h2>
+                    <p id="product-description">Cargando descripción...</p>
+                    <p class="price" id="product-price">$0.00</p>
 
                     <!-- Selector de cantidad -->
                     <div class="quantity-selector">
@@ -47,7 +45,7 @@
                     </div>
 
                     <!-- Botón Añadir al carrito -->
-                    <button class="add-to-cart" onclick="addToCart()">Añadir al carrito</button>
+                    <button class="add-to-cart" id="add-to-cart">Añadir al carrito</button>
                 </div>
             </div>
 
@@ -72,7 +70,86 @@
         </div>
     </footer>
 
-    <script src="js/detalle.js"></script>
+    <!-- Script para cargar los datos del producto -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAqQDc5FG4VMNN3qsdJwWzv_iZhfOcQlgI",
+            authDomain: "gestiontiendaudem.firebaseapp.com",
+            projectId: "gestiontiendaudem",
+            storageBucket: "gestiontiendaudem.appspot.com",
+            messagingSenderId: "446141955012",
+            appId: "1:446141955012:web:3a4c15d56ee14fb4e5c291"
+        };
+
+        // Inicializa Firebase y Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Obtén el ID del producto de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get("id");
+
+        async function cargarDetallesProducto() {
+            try {
+                // Referencia al documento del producto en Firestore
+                const docRef = doc(db, "productos", productId);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const producto = docSnap.data();
+
+                    // Actualiza la página con los detalles del producto
+                    document.getElementById("product-image").innerHTML = `<img src="${producto.imagen}" alt="${producto.nombre}">`;
+                    document.getElementById("product-name").textContent = producto.nombre;
+                    document.getElementById("product-description").textContent = producto.descripcion;
+                    document.getElementById("product-price").textContent = `$${producto.precio}`;
+
+                    // Configura el botón "Añadir al carrito"
+                    document.getElementById("add-to-cart").addEventListener("click", () => {
+                        const cantidad = parseInt(document.getElementById("quantity").value);
+                        addToCart(productId, producto.nombre, producto.precio, producto.imagen, cantidad);
+                    });
+                } else {
+                    console.error("No se encontró el producto.");
+                }
+            } catch (error) {
+                console.error("Error al cargar detalles del producto: ", error);
+            }
+        }
+
+        cargarDetallesProducto();
+
+        // Función para añadir productos al carrito
+        function addToCart(id, nombre, precio, imagen, cantidad) {
+            // Recupera el carrito actual del Local Storage
+            let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+            // Busca si el producto ya está en el carrito
+            const productoExistente = carrito.find((producto) => producto.id === id);
+
+            if (productoExistente) {
+                // Si ya existe, incrementa la cantidad
+                productoExistente.cantidad += cantidad;
+            } else {
+                // Si no existe, añade un nuevo producto al carrito
+                carrito.push({
+                    id,
+                    nombre,
+                    precio: parseFloat(precio),
+                    imagen,
+                    cantidad,
+                });
+            }
+
+            // Guarda el carrito actualizado en Local Storage
+            localStorage.setItem("carrito", JSON.stringify(carrito));
+            alert("Producto añadido al carrito");
+        }
+    </script>
 </body>
 
 </html>
